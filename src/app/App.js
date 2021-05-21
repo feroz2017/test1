@@ -12,6 +12,7 @@ const App = (props) => {
           <Navbar />
           <Route path="/settings" exact component={Settings} />
           <Route path="/" exact component={Home} />
+          <Layout.Footer>This is The End Of First App</Layout.Footer>
     </Layout>
   );
 };
