@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Layout, Row, Col, Affix , Spin} from "antd";
+import { Layout, Row, Col, Affix , Spin, Modal} from "antd";
 
 import UserCard from "./UserCard";
 import Search from "./Search";
 import { fetchUsers } from "../../redux/actions";
 
 // Helpers functions
-const renderUsers = ({ users },refElement) => {
+const renderUsers = ({ users },refElement, setModelVisible) => {
   return users.map((user,index) => (
     <Col style={{ marginBottom: "20px" }} className="gutter-row" span={4}>
       {" "}
@@ -19,7 +19,8 @@ const renderUsers = ({ users },refElement) => {
         first={user.name.first}
         last={user.name.last}
         email={user.email}
-        
+        onClick={setModelVisible}
+        index={index}
       />
       </div>
       :
@@ -27,7 +28,9 @@ const renderUsers = ({ users },refElement) => {
         thumbnail={user.picture.thumbnail}
         first={user.name.first}
         last={user.name.last}
-        email={user.email} 
+        email={user.email}
+        onClick={setModelVisible} 
+        index={index}
       />
       }
     </Col>
@@ -45,7 +48,7 @@ const getSearchResults = (data, term) =>
     }
   });
 
-const hasMore = (arr, limit = 200)=>arr.length != limit;
+const hasMore = (arr, limit = 200)=>arr.length <= limit;
 
 
 // Main Component
@@ -55,8 +58,16 @@ const Home = () => {
   let usersStore = useSelector((state) => state.usersStore);
   let choiceStore = useSelector((state) => state.choiceStore);
   let [searchUsers, setSearchUsers] = useState([]);
+  let [modelUser, setModelUser] = useState(0)
+  let [isModelVisible, setModelVisible] = useState(false);
+
   let [page, setPage] = useState(1); // For infinity Scroll Bar 
   let observer = useRef();
+
+  const makeUserVisible = (index)=>{
+    setModelVisible(true)
+    setModelUser(index)
+  }
 
   const lastPicElement = useCallback(node => {
     if(usersStore.loading) return
@@ -64,12 +75,11 @@ const Home = () => {
     observer.current = new IntersectionObserver(entries => {
       if(entries[0].isIntersecting && hasMore(usersStore.users)){
         setPage(prevPage => prevPage + 1);
+        setPage(prevPage => prevPage + 1); // Caching of some sort
       }
     })
     if(node) observer.current.observe(node)
   });
-
-
 
   useEffect(() => {
 
@@ -81,7 +91,6 @@ const Home = () => {
     setSearchUsers([...usersStore.users]);
   }, [page]);
 
-
   const updateResults = (searchTerm) => {
     if (!searchTerm) {
       setSearchUsers([...usersStore.users]);
@@ -91,20 +100,30 @@ const Home = () => {
     }
   };
 
-  
   return (
     <Layout.Content style={{ padding: "0px 50px", marginTop: "20px" }}>
+
+      {
+        usersStore.users != 0  && <Modal visible={isModelVisible} onCancel={()=>{setModelVisible(false)}}>
+        <p>{usersStore.users[modelUser].email}</p>
+        <p>Street: {usersStore.users[modelUser].location.street.name}</p>
+        <p>City: {usersStore.users[modelUser].location.city}</p>
+        <p>Sate: {usersStore.users[modelUser].location.state}</p>
+        <p>PostCode: {usersStore.users[modelUser].location.postcode}</p>
+        <p>Phone: {usersStore.users[modelUser].phone}</p>
+          </Modal>
+      }
+
       <Affix>
         <Search onUpdate={updateResults} />
       </Affix>
       <Row>
         {" "}
         {searchUsers.length === 0
-          ? renderUsers(usersStore, lastPicElement)
-          : renderUsers({ users: searchUsers },lastPicElement)}{" "}
+          ? renderUsers(usersStore, lastPicElement, makeUserVisible)
+          : renderUsers({ users: searchUsers },lastPicElement, makeUserVisible)}{" "}
           
       </Row>
-      {/* <Row>{renderUsers(usersStore)}</Row> */}
       {
             usersStore.loading ? <Spin style={{marginLeft:"50%"}} tip="Loading..."/>: null
       }
