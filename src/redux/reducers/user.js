@@ -12,10 +12,12 @@ export default (usersStore = initialUserStore, action) => {
           loading: true,
         };
       case FETCH_USERS_SUCCESS:
+        console.log(usersStore.users)
+        console.log(action.payload)
         return {
           ...usersStore,
           loading: false,
-          users: action.payload,
+          users: [...usersStore.users, ...action.payload],
         };
       case FETCH_USERS_FAILURE:
         return {

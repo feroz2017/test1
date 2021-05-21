@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import { Provider } from "react-redux";
 
 // App Components
-import App from "./components/App";
+import App from "./app/App";
 import store from "./redux/store";
 
 // static resource

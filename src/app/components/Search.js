@@ -3,10 +3,10 @@ import React, { useState } from "react";
 
 const Search = (props) => {
   let [searchTerm, setSearchTerm] = useState("");
-  
+
   const onChangeHandler = (e) => {
     setSearchTerm(e.target.value)
-    props.onUpdate(searchTerm)
+    props.onUpdate(e.target.value)
   };
   
   return (

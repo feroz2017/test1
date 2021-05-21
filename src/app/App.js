@@ -2,9 +2,9 @@ import React from "react";
 import { Layout } from "antd";
 import { Route } from "react-router-dom";
 
-import Navbar from "./app/Navbar";
-import Home from "./app/home";
-import Settings from "./app/settings";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
+import Settings from "./components/Settings";
 
 const App = (props) => {
   return (

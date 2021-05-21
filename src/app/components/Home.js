@@ -1,23 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Layout, Row, Col, Affix } from "antd";
+import { Layout, Row, Col, Affix , Spin} from "antd";
 
 import UserCard from "./UserCard";
-import Search from "./search";
+import Search from "./Search";
 import { fetchUsers } from "../../redux/actions";
 
 // Helpers functions
-const renderUsers = ({ users }) => {
-  console.log("Inside H", users);
-  return users.map((user) => (
+const renderUsers = ({ users },refElement) => {
+  return users.map((user,index) => (
     <Col style={{ marginBottom: "20px" }} className="gutter-row" span={4}>
       {" "}
+      {
+        users.length === index + 1 ?
+        <div ref={refElement}>
       <UserCard
         thumbnail={user.picture.thumbnail}
         first={user.name.first}
         last={user.name.last}
         email={user.email}
+        
       />
+      </div>
+      :
+      <UserCard
+        thumbnail={user.picture.thumbnail}
+        first={user.name.first}
+        last={user.name.last}
+        email={user.email} 
+      />
+      }
     </Col>
   ));
 };
@@ -33,19 +45,31 @@ const getSearchResults = (data, term) =>
     }
   });
 
+const hasMore = (arr, limit = 200)=>arr.length != limit;
+
+
 // Main Component
 const Home = () => {
   const dispatch = useDispatch();
 
   let usersStore = useSelector((state) => state.usersStore);
-
   let choiceStore = useSelector((state) => state.choiceStore);
-
   let [searchUsers, setSearchUsers] = useState([]);
-
   let [page, setPage] = useState(1); // For infinity Scroll Bar 
+  let observer = useRef();
 
-  let [loaded, setLoaded] = useState(false); // dfd
+  const lastPicElement = useCallback(node => {
+    if(usersStore.loading) return
+    if(observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      if(entries[0].isIntersecting && hasMore(usersStore.users)){
+        setPage(prevPage => prevPage + 1);
+      }
+    })
+    if(node) observer.current.observe(node)
+  });
+
+
 
   useEffect(() => {
 
@@ -67,9 +91,7 @@ const Home = () => {
     }
   };
 
-  if (usersStore.loading) {
-    return "loading";
-  }
+  
   return (
     <Layout.Content style={{ padding: "0px 50px", marginTop: "20px" }}>
       <Affix>
@@ -78,11 +100,17 @@ const Home = () => {
       <Row>
         {" "}
         {searchUsers.length === 0
-          ? renderUsers(usersStore)
-          : renderUsers({ users: searchUsers })}{" "}
+          ? renderUsers(usersStore, lastPicElement)
+          : renderUsers({ users: searchUsers },lastPicElement)}{" "}
+          
       </Row>
       {/* <Row>{renderUsers(usersStore)}</Row> */}
-      {loaded ? <h>Loading</h> : null}
+      {
+            usersStore.loading ? <Spin style={{marginLeft:"50%"}} tip="Loading..."/>: null
+      }
+      {
+              hasMore(usersStore.users) ? null : <h1 style={{marginLeft:"50%"}} tip="Loading...">End Of Catalog</h1> 
+      }
     </Layout.Content>
   );
 };

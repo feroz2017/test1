@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {withRouter} from 'react-router-dom'
 import { Layout, Menu } from "antd";
 
-import Search from './search';
 
 const Navbar = (props) => {
   let [selectedKey, setSelectedKey] = useState("1");
