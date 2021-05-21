@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Layout, Row, Col, Affix , Spin, Modal} from "antd";
+import { Layout, Row, Col, Affix , Spin, Modal, Result} from "antd";
 
 import UserCard from "./UserCard";
 import Search from "./Search";
@@ -49,7 +49,6 @@ const getSearchResults = (data, term) =>
   });
 
 const hasMore = (arr, limit = 200)=>arr.length <= limit;
-
 
 // Main Component
 const Home = () => {
@@ -100,6 +99,13 @@ const Home = () => {
     }
   };
 
+  if(usersStore.error){
+    return (
+      <Result  status="500"
+      title="500"
+      subTitle="Sorry, something went wrong."/>
+    );
+  }
   return (
     <Layout.Content style={{ padding: "0px 50px", marginTop: "20px" }}>
 
@@ -122,7 +128,6 @@ const Home = () => {
         {searchUsers.length === 0
           ? renderUsers(usersStore, lastPicElement, makeUserVisible)
           : renderUsers({ users: searchUsers },lastPicElement, makeUserVisible)}{" "}
-          
       </Row>
       {
             usersStore.loading ? <Spin style={{marginLeft:"50%"}} tip="Loading..."/>: null
