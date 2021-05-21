@@ -17,10 +17,11 @@ const Home = () => {
   let [searchUsers, setSearchUsers] = useState([]);
   let [modelUser, setModelUser] = useState(0);
   let [isModelVisible, setModelVisible] = useState(false);
+  let [isSearching, setIsSearching] = useState(false)
 
   let [page, setPage] = useState(1); // For infinity Scroll Bar
   let observer = useRef();
-  
+
   useEffect(() => {
     dispatch(
       fetchUsers(
@@ -29,6 +30,7 @@ const Home = () => {
     );
     setSearchUsers([...usersStore.users]);
   }, [page]);
+
   const makeUserVisible = (index) => {
     setModelVisible(true);
     setModelUser(index);
@@ -38,24 +40,25 @@ const Home = () => {
     if (usersStore.loading) return;
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore(usersStore.users)) {
+      if (entries[0].isIntersecting && hasMore(usersStore.users) && !isSearching) {
         setPage((prevPage) => prevPage + 1);
         setPage((prevPage) => prevPage + 1); // Caching of some sort
       }
     });
     if (node) observer.current.observe(node);
   });
-
-  
-
   const updateResults = (searchTerm) => {
     if (!searchTerm) {
       setSearchUsers([...usersStore.users]);
+      setIsSearching(false)
     } else {
+      setIsSearching(true)
       const result = getSearchResults(usersStore.users, searchTerm.trim());
       setSearchUsers([...result]);
     }
   };
+
+
 
   if (usersStore.error) {
     return (
