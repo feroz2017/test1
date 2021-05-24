@@ -7,7 +7,7 @@ import Navbar from "./components/Common/Navbar";
 import Home from './containers/Home.jsx'
 import Settings from './containers/Settings.jsx'
 
-const App = (props) => {
+const App = () => {
   return (
     <Layout>
       <Navbar />

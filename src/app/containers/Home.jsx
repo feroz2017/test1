@@ -25,7 +25,7 @@ const BATCH_SIZE = 50;
 
 
 // Main Component
-const Home = (props) => {
+const Home = () => {
 
   const dispatch = useDispatch();
 
