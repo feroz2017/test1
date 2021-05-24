@@ -1,17 +1,26 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Affix, Spin, Result } from "antd";
+import { Row, Affix, Result } from "antd";
 
 import Search from "./Search";
 import UserModel from "./UserModel";
 import { fetchUsers } from "../../redux/actions";
 // Helpers functions
-import { renderUsers, getSearchResults } from "../helpers/homeHelper";
-import { hasMore, isEmpty } from "../helpers/common";
+import { renderUsers, getSearchResults } from "../utils/homeHelper.js";
+import {
+  hasMore,
+  isEmpty,
+  displayEndCatalog,
+  displaySpinner,
+} from "../utils/common";
+import {getUrl} from "../services/userService.js";
 
-// static 
+// static
 import "../../../public/styles/index.css";
 
+
+// 
+const BATCH_SIZE = 50;
 // Main Component
 const Home = () => {
   const dispatch = useDispatch();
@@ -27,14 +36,10 @@ const Home = () => {
   let observer = useRef();
 
   useEffect(() => {
-    dispatch(
-      fetchUsers(
-        `https://randomuser.me/api/?page=${page}&results=50&nat=${choiceStore}`
-      )
-    );
+    dispatch(fetchUsers(getUrl(page,BATCH_SIZE,choiceStore)));
+    // useUserService(page,choiceStore)
     setSearchUsers([...usersStore.users]);
-  }, [page,choiceStore]);
-
+  }, [page, choiceStore]);
 
   const makeUserVisible = (index) => {
     setModelVisible(true);
@@ -56,6 +61,7 @@ const Home = () => {
     });
     if (node) observer.current.observe(node);
   });
+
   const updateResults = (searchTerm) => {
     if (!searchTerm) {
       setSearchUsers([...usersStore.users]);
@@ -66,13 +72,11 @@ const Home = () => {
       setSearchUsers([...result]);
     }
   };
-  const getUsersJSX = () => isEmpty(searchUsers)
-    ? renderUsers(usersStore, lastPicElement, makeUserVisible)
-    : renderUsers(
-      { users: searchUsers },
-      lastPicElement,
-      makeUserVisible
-    )
+
+  const getUsersJSX = () =>
+    isEmpty(searchUsers)
+      ? renderUsers(usersStore, lastPicElement, makeUserVisible)
+      : renderUsers({ users: searchUsers }, lastPicElement, makeUserVisible);
 
   if (usersStore.error) {
     return (
@@ -84,8 +88,8 @@ const Home = () => {
     );
   }
   return (
-     <React.Fragment>
-     {!isEmpty(usersStore.users) && (
+    <React.Fragment>
+      {!isEmpty(usersStore.users) && (
         <UserModel
           isModelVisible={isModelVisible}
           setModelVisible={setModelVisible}
@@ -96,11 +100,9 @@ const Home = () => {
         <Search onUpdate={updateResults} />
       </Affix>
       <Row>{getUsersJSX()}</Row>
-      {usersStore.loading ? (
-        <Spin className="centerElement" tip="Loading..." />
-      ) : null}
-      {hasMore(usersStore.users) ? null : (<h1 className="centerElement">End Of Catalog</h1>)}
-     </React.Fragment>
+      {displaySpinner(usersStore.loading)}
+      {displayEndCatalog(usersStore.users)}
+    </React.Fragment>
   );
 };
 
