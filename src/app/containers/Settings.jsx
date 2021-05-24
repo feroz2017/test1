@@ -1,11 +1,11 @@
 import React  from 'react';
-import {Radio} from 'antd'
 import {useSelector,useDispatch} from 'react-redux'
 
 import {countrySelection,resetUsersStore} from '../../redux/actions'
-import Settings from '../components/Settings';
+import List from '../components/List';
 
-const SettingContainer = () => {
+const COUNTRIRES = ["CH", "ES", "FR", "GB", "ALL"]
+const Settings = () => {
 
     let choice = useSelector(state=>state.choiceStore)
     
@@ -15,7 +15,7 @@ const SettingContainer = () => {
         dispatch(resetUsersStore());
     }
     return (
-        <Settings onChangeHandler={onChangeHandler} choice={choice}/>
+        <List onChangeHandler={onChangeHandler} choice={choice} list={COUNTRIRES}/>
         );
 }
-export default SettingContainer;
+export default Settings;

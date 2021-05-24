@@ -24,11 +24,13 @@ import "../../../public/styles/index.css";
 const BATCH_SIZE = 50;
 
 // Main Component
-const Home = () => {
+const Home = (props) => {
+
   const dispatch = useDispatch();
 
   let usersStore = useSelector((state) => state.usersStore);
   let choiceStore = useSelector((state) => state.choiceStore);
+  
   let [searchUsers, setSearchUsers] = useState([]);
   let [modelUser, setModelUser] = useState(0);
   let [isModelVisible, setModelVisible] = useState(false);

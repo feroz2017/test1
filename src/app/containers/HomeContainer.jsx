@@ -29,13 +29,14 @@ const HomeContainer = () => {
 
   let usersStore = useSelector((state) => state.usersStore);
   let choiceStore = useSelector((state) => state.choiceStore);
-  let [searchUsers, setSearchUsers] = useState([]);
-  let [modelUser, setModelUser] = useState(0);
-  let [isModelVisible, setModelVisible] = useState(false);
-  let [isSearching, setIsSearching] = useState(false);
-
   let [page, setPage] = useState(1); // For infinity Scroll Bar
-  let observer = useRef();
+
+
+  // let [searchUsers, setSearchUsers] = useState([]);
+  // let [modelUser, setModelUser] = useState(0);
+  // let [isModelVisible, setModelVisible] = useState(false);
+  // let [isSearching, setIsSearching] = useState(false);
+  // let observer = useRef();
 
   useEffect(() => {
     dispatch(fetchUsers(getUrl(page,BATCH_SIZE,choiceStore)));
