@@ -2,9 +2,9 @@ import React  from 'react';
 import {useSelector,useDispatch} from 'react-redux'
 
 import {countrySelection,resetUsersStore} from '../../redux/actions'
-import List from '../components/Settings/List.jsx';
+import CountryList from '../components/Settings/CountryList.jsx';
 
-const COUNTRIRES = ["CH", "ES", "FR", "GB", "ALL"]
+
 const Settings = () => {
 
     let choice = useSelector(state=>state.choiceStore)
@@ -15,7 +15,7 @@ const Settings = () => {
         dispatch(resetUsersStore());
     }
     return (
-        <List onChangeHandler={onChangeHandler} choice={choice} list={COUNTRIRES}/>
+        <CountryList onChangeHandler={onChangeHandler} choice={choice}/>
         );
 }
 export default Settings;

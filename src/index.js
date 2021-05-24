@@ -9,7 +9,7 @@ import App from "./app/App";
 import store from "./redux/store";
 
 // static resource
-import "../public/styles/index.css";
+import "./app/assets/styles/index.css"
 
 render(
     <Provider store={store}> 

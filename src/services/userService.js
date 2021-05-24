@@ -9,4 +9,6 @@
 //         )
 //       );
 // }
-export const getUrl = (page,batchSize,choiceStore)=>`https://randomuser.me/api/?page=${page}&results=${batchSize}&nat=${choiceStore}`
+
+const BATCH_SIZE = 50;
+export const getUrl = (page,choiceStore,batchSize = BATCH_SIZE)=>`https://randomuser.me/api/?page=${page}&results=${batchSize}&nat=${choiceStore}`

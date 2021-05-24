@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {  Affix, Result } from "antd";
 
 import Search from "../components/Home/Search";
-import Grid from '../components/Home/Grid.jsx'
+import UserGrid from '../components/Home/UserGrid.jsx'
 import Spinner from "../components/Common/Spinner"
 import EndCatalog from "../components/Common/EndCatalog";
 
@@ -21,7 +21,6 @@ import {getUrl} from "../../services/userService.js";
 import "../../../public/styles/index.css";
 
 
-const BATCH_SIZE = 50;
 
 
 // Main Component
@@ -40,7 +39,7 @@ const Home = () => {
 
 
   useEffect(() => {
-    dispatch(fetchUsers(getUrl(page,BATCH_SIZE,choiceStore)));
+    dispatch(fetchUsers(getUrl(page,choiceStore)));
     // useUserService(page,choiceStore)
     setSearchUsers([...usersStore.users]);
   }, [page, choiceStore]);
@@ -73,7 +72,7 @@ const Home = () => {
       <Affix>
         <Search onUpdate={updateResults} />
       </Affix>
-        <Grid usersStore={usersStore} searchUsers={searchUsers} isSearching={isSearching} onPageChange={pageHandler}/>
+        <UserGrid usersStore={usersStore} searchUsers={searchUsers} isSearching={isSearching} onPageChange={pageHandler}/>
         <Spinner status={usersStore.loading}/>
         <EndCatalog visibility={!hasMore(usersStore.users)}/>
     </React.Fragment>

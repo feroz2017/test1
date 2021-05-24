@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import "../../../../public/styles/index.css"
+import "../../assets/styles/index.css"
 
 const Search = (props) => {
   let [searchTerm, setSearchTerm] = useState("");
