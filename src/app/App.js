@@ -3,7 +3,8 @@ import { Layout } from "antd";
 import { Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Home from "./components/Home";
+
+import Home from './containers/Home.jsx'
 import Settings from './containers/Settings.jsx'
 
 const App = (props) => {

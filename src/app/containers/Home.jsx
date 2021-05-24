@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Affix, Result } from "antd";
+import {  Affix, Result } from "antd";
 
-import Search from "./Search";
-import UserModel from "./UserModel";
+import Search from "../components/Search";
+import Grid from '../components/Grid.jsx'
+
+
 import { fetchUsers } from "../../redux/actions";
+
 // Helpers functions
-import { renderUsers, getSearchResults } from "../utils/homeHelper.js";
-// import HomeContainer from '../containers/HomeContainer.js';
 import {
-  hasMore,
-  isEmpty,
   displayEndCatalog,
   displaySpinner,
 } from "../utils/common";
@@ -20,8 +19,18 @@ import {getUrl} from "../../services/userService.js";
 import "../../../public/styles/index.css";
 
 
-
 const BATCH_SIZE = 50;
+
+// Helper Functions
+const getSearchResults = (data, term) =>
+data.filter((element) => {
+  if (
+    contains(element.name.first, term) ||
+    contains(element.name.last, term)
+  ) {
+    return element;
+  }
+});
 
 // Main Component
 const Home = (props) => {
@@ -32,12 +41,11 @@ const Home = (props) => {
   let choiceStore = useSelector((state) => state.choiceStore);
   
   let [searchUsers, setSearchUsers] = useState([]);
-  let [modelUser, setModelUser] = useState(0);
-  let [isModelVisible, setModelVisible] = useState(false);
+
   let [isSearching, setIsSearching] = useState(false);
 
   let [page, setPage] = useState(1); // For infinity Scroll Bar
-  let observer = useRef();
+
 
   useEffect(() => {
     dispatch(fetchUsers(getUrl(page,BATCH_SIZE,choiceStore)));
@@ -45,27 +53,9 @@ const Home = (props) => {
     setSearchUsers([...usersStore.users]);
   }, [page, choiceStore]);
 
-  const makeUserVisible = (index) => {
-    setModelVisible(true);
-    setModelUser(index);
-  };
-
-  const lastPicElement = useCallback((node) => {
-    if (usersStore.loading) return;
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver((entries) => {
-      if (
-        entries[0].isIntersecting &&
-        hasMore(usersStore.users) &&
-        !isSearching
-      ) {
-        setPage((prevPage) => prevPage + 1);
-        setPage((prevPage) => prevPage + 1); // Caching of some sort
-      }
-    });
-    if (node) observer.current.observe(node);
-  });
-
+  const pageHandler = (value)=>{
+    setPage((prev)=>prev+1)
+  }
   const updateResults = (searchTerm) => {
     if (!searchTerm) {
       setSearchUsers([...usersStore.users]);
@@ -76,11 +66,6 @@ const Home = (props) => {
       setSearchUsers([...result]);
     }
   };
-
-  const getUsersJSX = () =>
-    isEmpty(searchUsers)
-      ? renderUsers(usersStore, lastPicElement, makeUserVisible)
-      : renderUsers({ users: searchUsers }, lastPicElement, makeUserVisible);
 
   if (usersStore.error) {
     return (
@@ -93,17 +78,10 @@ const Home = (props) => {
   }
   return (
     <React.Fragment>
-      {!isEmpty(usersStore.users) && (
-        <UserModel
-          isModelVisible={isModelVisible}
-          setModelVisible={setModelVisible}
-          user={usersStore.users[modelUser]}
-        />
-      )}
       <Affix>
         <Search onUpdate={updateResults} />
       </Affix>
-      <Row>{getUsersJSX()}</Row>
+        <Grid usersStore={usersStore} searchUsers={searchUsers} isSearching={isSearching} onPageChange={pageHandler}/>
       {displaySpinner(usersStore.loading)}
       {displayEndCatalog(usersStore.users)}
     </React.Fragment>
