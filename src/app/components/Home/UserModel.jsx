@@ -2,13 +2,12 @@ import React from "react";
 import {Modal} from 'antd'
 export default function UserModel(props) {
   let {isModelVisible,setModelVisible,user} = props;
-    
+  const makeDisapper = ()=>setModelVisible(false);
   return (
     <Modal
       visible={isModelVisible}
-      onCancel={() => {
-        setModelVisible(false);
-      }}
+      onCancel={makeDisapper}
+      onOk={makeDisapper}
     >
       <p>{user.email}</p>
       <p>Street: {user.location.street.name}</p>
