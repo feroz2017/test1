@@ -24,7 +24,7 @@ import "../../../public/styles/index.css";
 const BATCH_SIZE = 50;
 
 // Main Component
-const Home = () => {
+const HomeContainer = () => {
   const dispatch = useDispatch();
 
   let usersStore = useSelector((state) => state.usersStore);
@@ -108,4 +108,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomeContainer;
