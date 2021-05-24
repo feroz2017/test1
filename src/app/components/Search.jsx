@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import "../../../public/styles/index.css"
 
 const Search = (props) => {
   let [searchTerm, setSearchTerm] = useState("");
@@ -8,16 +9,9 @@ const Search = (props) => {
     setSearchTerm(e.target.value)
     props.onUpdate(e.target.value)
   };
-  
   return (
     <input
-      style={{
-        marginLeft: "25%",
-        marginBottom: "5%",
-        width: "50%",
-        padding: "0px",
-        fontSize: "35px",
-      }}
+      className="searchElement"
       value={searchTerm}
       onInput={onChangeHandler}
     ></input>
