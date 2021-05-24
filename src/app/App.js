@@ -10,8 +10,10 @@ const App = (props) => {
   return (
     <Layout>
           <Navbar />
+          <Layout.Content  style={{ padding: "0px 50px", marginTop: "20px" }}>
           <Route path="/settings" exact component={Settings} />
           <Route path="/" exact component={Home} />
+          </Layout.Content>
           <Layout.Footer>This is The End Of First App</Layout.Footer>
     </Layout>
   );

@@ -1,12 +1,16 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Layout, Row, Affix, Spin, Modal, Result } from "antd";
+import { Row, Affix, Spin, Result } from "antd";
 
 import Search from "./Search";
+import UserModel from "./UserModel";
 import { fetchUsers } from "../../redux/actions";
 // Helpers functions
 import { renderUsers, getSearchResults } from "../helpers/homeHelper";
-import { hasMore } from "../helpers/common";
+import { hasMore, isEmpty } from "../helpers/common";
+
+// static 
+import "../../../public/styles/index.css";
 
 // Main Component
 const Home = () => {
@@ -17,7 +21,7 @@ const Home = () => {
   let [searchUsers, setSearchUsers] = useState([]);
   let [modelUser, setModelUser] = useState(0);
   let [isModelVisible, setModelVisible] = useState(false);
-  let [isSearching, setIsSearching] = useState(false)
+  let [isSearching, setIsSearching] = useState(false);
 
   let [page, setPage] = useState(1); // For infinity Scroll Bar
   let observer = useRef();
@@ -40,7 +44,11 @@ const Home = () => {
     if (usersStore.loading) return;
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore(usersStore.users) && !isSearching) {
+      if (
+        entries[0].isIntersecting &&
+        hasMore(usersStore.users) &&
+        !isSearching
+      ) {
         setPage((prevPage) => prevPage + 1);
         setPage((prevPage) => prevPage + 1); // Caching of some sort
       }
@@ -50,15 +58,20 @@ const Home = () => {
   const updateResults = (searchTerm) => {
     if (!searchTerm) {
       setSearchUsers([...usersStore.users]);
-      setIsSearching(false)
+      setIsSearching(false);
     } else {
-      setIsSearching(true)
+      setIsSearching(true);
       const result = getSearchResults(usersStore.users, searchTerm.trim());
       setSearchUsers([...result]);
     }
   };
-
-
+  const getUsersJSX = () => isEmpty(searchUsers)
+    ? renderUsers(usersStore, lastPicElement, makeUserVisible)
+    : renderUsers(
+      { users: searchUsers },
+      lastPicElement,
+      makeUserVisible
+    )
 
   if (usersStore.error) {
     return (
@@ -70,45 +83,23 @@ const Home = () => {
     );
   }
   return (
-    <Layout.Content style={{ padding: "0px 50px", marginTop: "20px" }}>
-      {usersStore.users.length != 0 && (
-        <Modal
-          visible={isModelVisible}
-          onCancel={() => {
-            setModelVisible(false);
-          }}
-        >
-          <p>{usersStore.users[modelUser].email}</p>
-          <p>Street: {usersStore.users[modelUser].location.street.name}</p>
-          <p>City: {usersStore.users[modelUser].location.city}</p>
-          <p>Sate: {usersStore.users[modelUser].location.state}</p>
-          <p>PostCode: {usersStore.users[modelUser].location.postcode}</p>
-          <p>Phone: {usersStore.users[modelUser].phone}</p>
-        </Modal>
+     <React.Fragment>
+     {!isEmpty(usersStore.users) && (
+        <UserModel
+          isModelVisible={isModelVisible}
+          setModelVisible={setModelVisible}
+          user={usersStore.users[modelUser]}
+        />
       )}
-
       <Affix>
         <Search onUpdate={updateResults} />
       </Affix>
-      <Row>
-        {" "}
-        {searchUsers.length === 0
-          ? renderUsers(usersStore, lastPicElement, makeUserVisible)
-          : renderUsers(
-              { users: searchUsers },
-              lastPicElement,
-              makeUserVisible
-            )}{" "}
-      </Row>
+      <Row>{getUsersJSX()}</Row>
       {usersStore.loading ? (
-        <Spin style={{ marginLeft: "50%" }} tip="Loading..." />
+        <Spin className="centerElement" tip="Loading..." />
       ) : null}
-      {hasMore(usersStore.users) ? null : (
-        <h1 style={{ marginLeft: "50%" }} tip="Loading...">
-          End Of Catalog
-        </h1>
-      )}
-    </Layout.Content>
+      {hasMore(usersStore.users) ? null : (<h1 className="centerElement">End Of Catalog</h1>)}
+     </React.Fragment>
   );
 };
 
