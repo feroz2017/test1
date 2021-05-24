@@ -40,4 +40,4 @@ export const getSearchResults = (data, term) =>
     ) {
       return element;
     }
-  });
+});

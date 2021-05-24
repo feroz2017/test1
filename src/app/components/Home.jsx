@@ -19,8 +19,9 @@ import {getUrl} from "../services/userService.js";
 import "../../../public/styles/index.css";
 
 
-// 
+
 const BATCH_SIZE = 50;
+
 // Main Component
 const Home = () => {
   const dispatch = useDispatch();

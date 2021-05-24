@@ -17,5 +17,5 @@ render(
           <App />
      </BrowserRouter>
     </Provider>,
-  document.querySelector("#root")
+  document.querySelector("body")
 );
