@@ -4,6 +4,7 @@ import {
   FETCH_USERS_REQUEST,
   FETCH_USERS_FAILURE,
   FETCH_USERS_SUCCESS,
+  RESET_URSERS
 } from "../actions/types";
 const initialUserStore = {
   loading: false,
@@ -42,6 +43,8 @@ export default (usersStore = initialUserStore, action) => {
         draftState.loading = false,
         draftState.error = action.payload;
       });
+    case RESET_URSERS:
+        return initialUserStore;
     default:
       return usersStore;
   }

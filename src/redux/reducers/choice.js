@@ -1,6 +1,6 @@
 import {SELECT_COUNTRY_CHOICE} from '../actions/types'
 
-const initialSelection = "all";
+const initialSelection = "ch,es,fr,gb";
 
 export default (choice=initialSelection, action)=>{
     switch(action.type){

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {FETCH_USERS_REQUEST,FETCH_USERS_SUCCESS,FETCH_USERS_FAILURE,SELECT_COUNTRY_CHOICE,UPDATE_SEARCH_RESULT} from './types'
+import {FETCH_USERS_REQUEST,FETCH_USERS_SUCCESS,FETCH_USERS_FAILURE,SELECT_COUNTRY_CHOICE,RESET_URSERS} from './types'
 // Action Creators for Users
 export const fetchUserRequest = () => {
   return {
@@ -19,7 +19,11 @@ export const fetchUserFailure = (err) => {
     payload: err,
   };
 };
-
+export const resetUsersStore = ()=>{
+  return {
+    type: RESET_URSERS,
+  }
+}
 
 // Action Creators for Country Selection
 export const countrySelection = (choice)=>{

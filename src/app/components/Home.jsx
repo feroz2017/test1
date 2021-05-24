@@ -33,7 +33,8 @@ const Home = () => {
       )
     );
     setSearchUsers([...usersStore.users]);
-  }, [page]);
+  }, [page,choiceStore]);
+
 
   const makeUserVisible = (index) => {
     setModelVisible(true);
