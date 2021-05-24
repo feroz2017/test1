@@ -7,13 +7,14 @@ import UserModel from "./UserModel";
 import { fetchUsers } from "../../redux/actions";
 // Helpers functions
 import { renderUsers, getSearchResults } from "../utils/homeHelper.js";
+import HomeContainer from '../containers/HomeContainer.js';
 import {
   hasMore,
   isEmpty,
   displayEndCatalog,
   displaySpinner,
 } from "../utils/common";
-import {getUrl} from "../services/userService.js";
+import {getUrl} from "../../services/userService.js";
 
 // static
 import "../../../public/styles/index.css";

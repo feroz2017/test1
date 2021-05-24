@@ -44,7 +44,8 @@ module.exports = {
   },
   plugins: [
       new HtmlWebpackPlugin({
-          title: "Gallary App!"
+          title: "Gallary App!",
+          template: path.resolve(__dirname,'public','index.html')
       })
   ]
   ,
