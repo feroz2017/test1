@@ -2,7 +2,7 @@ import React  from 'react';
 import {useSelector,useDispatch} from 'react-redux'
 
 import {countrySelection,resetUsersStore} from '../../redux/actions'
-import List from '../components/List';
+import List from '../components/Settings/List.jsx';
 
 const COUNTRIRES = ["CH", "ES", "FR", "GB", "ALL"]
 const Settings = () => {

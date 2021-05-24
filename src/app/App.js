@@ -2,7 +2,7 @@ import React from "react";
 import { Layout } from "antd";
 import { Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Common/Navbar";
 
 import Home from './containers/Home.jsx'
 import Settings from './containers/Settings.jsx'

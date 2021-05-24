@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {  Affix, Result } from "antd";
 
-import Search from "../components/Search";
-import Grid from '../components/Grid.jsx'
+import Search from "../components/Home/Search";
+import Grid from '../components/Home/Grid.jsx'
 
 
 import { fetchUsers } from "../../redux/actions";
 
 // Helpers functions
 import {
+  contains,
   displayEndCatalog,
   displaySpinner,
 } from "../utils/common";
