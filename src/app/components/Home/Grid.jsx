@@ -8,7 +8,7 @@ import UserModel from './UserModel'
 import {
     hasMore,
     isEmpty,
-} from "../../utils/common";
+} from "../../utils/helpers";
 
 const getCard = (user, index, setModelVisible) => {
     return (

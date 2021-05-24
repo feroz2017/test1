@@ -14,31 +14,15 @@ const initialUserStore = {
 export default (usersStore = initialUserStore, action) => {
   switch (action.type) {
     case FETCH_USERS_REQUEST:
-      // return {
-      //   ...usersStore,
-      //   loading: true,
-      // };
       return produce(usersStore, (draftState) => {
         draftState.loading = true;
       });
     case FETCH_USERS_SUCCESS:
-      // console.log(usersStore.users)
-      // console.log(action.payload)
-      // return {
-      //   ...usersStore,
-      //   loading: false,
-      //   users: [...usersStore.users, ...action.payload],
-      // };
       return produce(usersStore, (draftState) => {
         draftState.loading = false;
         Array.prototype.push.apply(draftState.users, action.payload);
       });
     case FETCH_USERS_FAILURE:
-      // return {
-      //   ...usersStore,
-      //   loading:false,
-      //   error: action.payload,
-      // };
       return produce(usersStore, (draftState) => {
         draftState.loading = false,
         draftState.error = action.payload;

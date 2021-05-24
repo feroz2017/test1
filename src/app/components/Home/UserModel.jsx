@@ -2,6 +2,7 @@ import React from "react";
 import {Modal} from 'antd'
 export default function UserModel(props) {
   let {isModelVisible,setModelVisible,user} = props;
+    
   return (
     <Modal
       visible={isModelVisible}

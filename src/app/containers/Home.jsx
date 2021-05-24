@@ -4,16 +4,17 @@ import {  Affix, Result } from "antd";
 
 import Search from "../components/Home/Search";
 import Grid from '../components/Home/Grid.jsx'
+import Spinner from "../components/Common/Spinner"
+import EndCatalog from "../components/Common/EndCatalog";
 
 
 import { fetchUsers } from "../../redux/actions";
 
 // Helpers functions
 import {
-  contains,
-  displayEndCatalog,
-  displaySpinner,
-} from "../utils/common";
+  getSearchResults,
+  hasMore,
+} from "../utils/helpers";
 import {getUrl} from "../../services/userService.js";
 
 // static
@@ -22,16 +23,6 @@ import "../../../public/styles/index.css";
 
 const BATCH_SIZE = 50;
 
-// Helper Functions
-const getSearchResults = (data, term) =>
-data.filter((element) => {
-  if (
-    contains(element.name.first, term) ||
-    contains(element.name.last, term)
-  ) {
-    return element;
-  }
-});
 
 // Main Component
 const Home = (props) => {
@@ -83,8 +74,8 @@ const Home = (props) => {
         <Search onUpdate={updateResults} />
       </Affix>
         <Grid usersStore={usersStore} searchUsers={searchUsers} isSearching={isSearching} onPageChange={pageHandler}/>
-      {displaySpinner(usersStore.loading)}
-      {displayEndCatalog(usersStore.users)}
+        <Spinner status={usersStore.loading}/>
+        <EndCatalog visibility={!hasMore(usersStore.users)}/>
     </React.Fragment>
   );
 };
