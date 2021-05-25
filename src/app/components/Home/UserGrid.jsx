@@ -56,8 +56,8 @@ const Grid = (props) => {
             hasMore(usersStore.users) &&
             !isSearching
           ) {
-            onPageChange(1)
-            onPageChange(1)// Caching of some sort
+            onPageChange()
+            onPageChange()// Caching of some sort
           }
         });
         if (node) observer.current.observe(node);

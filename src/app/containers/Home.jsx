@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {  Affix, Result } from "antd";
 
@@ -8,54 +8,38 @@ import Spinner from "../components/Common/Spinner"
 import EndCatalog from "../components/Common/EndCatalog";
 
 
-import { fetchUsers } from "../../redux/actions";
+import { fetchUsers , searchQuery,nextPage} from "../../redux/actions";
 
 // Helpers functions
 import {
-  getSearchResults,
   hasMore,
 } from "../utils/helpers";
 import {getUrl} from "../../services/userService.js";
 
 // static
-import "../../../public/styles/index.css";
-
-
-
+import "../assets/styles/index.css"
 
 // Main Component
 const Home = () => {
 
   const dispatch = useDispatch();
 
-  let usersStore = useSelector((state) => state.usersStore);
-  let choiceStore = useSelector((state) => state.choiceStore);
+  let usersStore = useSelector(state => state.usersStore);
+  let choiceStore = useSelector(state => state.choiceStore);
+  let searchUsersStore = useSelector(state => state.searchUsersStore);
+  let pageStore = useSelector(state => state.pageStore);
   
-  let [searchUsers, setSearchUsers] = useState([]);
-
-  let [isSearching, setIsSearching] = useState(false);
-
-  let [page, setPage] = useState(1); // For infinity Scroll Bar
 
 
   useEffect(() => {
-    dispatch(fetchUsers(getUrl(page,choiceStore)));
-    // useUserService(page,choiceStore)
-    setSearchUsers([...usersStore.users]);
-  }, [page, choiceStore]);
+    dispatch(fetchUsers(getUrl(pageStore,choiceStore)));
+  }, [pageStore, choiceStore]);
 
-  const pageHandler = (value)=>{
-    setPage((prev)=>prev+1)
+  const pageHandler = ()=>{
+    dispatch(nextPage(pageStore))
   }
   const updateResults = (searchTerm) => {
-    if (!searchTerm) {
-      setSearchUsers([...usersStore.users]);
-      setIsSearching(false);
-    } else {
-      setIsSearching(true);
-      const result = getSearchResults(usersStore.users, searchTerm.trim());
-      setSearchUsers([...result]);
-    }
+    dispatch(searchQuery(searchTerm,usersStore.users));
   };
 
   if (usersStore.error) {
@@ -72,7 +56,7 @@ const Home = () => {
       <Affix>
         <Search onUpdate={updateResults} />
       </Affix>
-        <UserGrid usersStore={usersStore} searchUsers={searchUsers} isSearching={isSearching} onPageChange={pageHandler}/>
+        <UserGrid usersStore={usersStore} searchUsers={searchUsersStore.searchUsers} isSearching={searchUsersStore.searching} onPageChange={pageHandler}/>
         <Spinner status={usersStore.loading}/>
         <EndCatalog visibility={!hasMore(usersStore.users)}/>
     </React.Fragment>

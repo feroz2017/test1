@@ -9,3 +9,8 @@
     padding: 0px;
     font-size:  35px;
 }
+.space-align-block {
+    flex: none;
+    margin: 8px 4px;
+    padding: 4px;
+  }

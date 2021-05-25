@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-
+import {Space, Input} from "antd"
 import "../../assets/styles/index.css"
 
+
+// className="searchElement"
 const Search = (props) => {
   let [searchTerm, setSearchTerm] = useState("");
 
@@ -10,11 +12,15 @@ const Search = (props) => {
     props.onUpdate(e.target.value)
   };
   return (
-    <input
-      className="searchElement"
-      value={searchTerm}
-      onInput={onChangeHandler}
-    ></input>
+   <div className="space-align-block">
+    <Space align="center" size="large" direction="horizontal">
+      <Input
+        value={searchTerm}
+        onInput={onChangeHandler}
+        style={{fontSize:"45px",marginLeft:"45%"}}
+      />
+   </Space>
+   </div>
   );
 };
 

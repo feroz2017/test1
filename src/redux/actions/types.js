@@ -7,4 +7,8 @@ export const RESET_URSERS = "RESET_USERS";
 // Action Types for Country Selection
 export const SELECT_COUNTRY_CHOICE = "SELECT_COUNTRY_CHOICE";
 
+// Action Types for Searching
+export const UPDATE_SEARCH_STORE = "UPDATE_SEARCH_STORE"
+
+export const NEXT_PAGE = "NEXT_PAGE"
 
